@@ -1,11 +1,13 @@
 import { useState } from "react";
 import TodoForm from "./components/TodoForm";
-import { FaTrash } from "react-icons/fa";
-import { deleteTodo } from "./services/todoService";
+import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
+import { deleteTodo, updateTodo } from "./services/todoService";
 import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
 
   const handleTodoCreated = (newTodo) => {
     setTodos((prevTodos) => [...prevTodos, newTodo]);
@@ -18,6 +20,32 @@ function App() {
     } catch (error) {
       console.error("Failed to delete todo:", error);
     }
+  };
+
+  const handleUpdateTodo = async (todoId) => {
+    try {
+      const response = await updateTodo(todoId, { title: editTitle });
+      
+      if (response.success && response.data) {
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo._id === todoId ? response.data : todo
+          )
+        );
+        setEditingId(null);
+        setEditTitle("");
+      } else {
+        throw new Error("Failed to update todo");
+      }
+    } catch (error) {
+      console.error("Failed to update todo:", error);
+      // Optionally add user feedback here
+    }
+  };
+
+  const startEditing = (todoId, currentTitle) => {
+    setEditingId(todoId);
+    setEditTitle(currentTitle);
   };
 
   return (
@@ -38,16 +66,47 @@ function App() {
                       className="mb-4 p-6 text-left bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
                     >
                       <div className="flex justify-between items-center">
-                        <h3 className="font-semibold text-xl text-indigo-700">
-                          {todo.title}
-                        </h3>
-                        <button
-                          onClick={() => handleDeleteTodo(todo._id)}
-                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
-                          aria-label="Delete todo"
-                        >
-                          <FaTrash />
-                        </button>
+                        {editingId === todo._id ? (
+                          <div className="flex items-center gap-4 w-full">
+                            <input
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              className="flex-1 px-3 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                            <button
+                              onClick={() => handleUpdateTodo(todo._id)}
+                              className="text-green-500 hover:text-green-700 transition-colors duration-200"
+                              aria-label="Save todo"
+                            >
+                              <FaCheck />
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <h3 className="font-semibold text-xl text-indigo-700">
+                              {todo.title}
+                            </h3>
+                            <div className="flex gap-3">
+                              <button
+                                onClick={() =>
+                                  startEditing(todo._id, todo.title)
+                                }
+                                className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                                aria-label="Edit todo"
+                              >
+                                <FaEdit /> {/* Remove the bg-black class */}
+                              </button>
+                              <button
+                                onClick={() => handleDeleteTodo(todo._id)}
+                                className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                                aria-label="Delete todo"
+                              >
+                                <FaTrash />
+                              </button>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
