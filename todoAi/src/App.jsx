@@ -1,5 +1,7 @@
 import { useState } from "react";
 import TodoForm from "./components/TodoForm";
+import { FaTrash } from "react-icons/fa";
+import { deleteTodo } from "./services/todoService";
 import "./App.css";
 
 function App() {
@@ -7,6 +9,15 @@ function App() {
 
   const handleTodoCreated = (newTodo) => {
     setTodos((prevTodos) => [...prevTodos, newTodo]);
+  };
+
+  const handleDeleteTodo = async (todoId) => {
+    try {
+      await deleteTodo(todoId);
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== todoId));
+    } catch (error) {
+      console.error("Failed to delete todo:", error);
+    }
   };
 
   return (
@@ -26,10 +37,18 @@ function App() {
                       key={index}
                       className="mb-4 p-6 text-left bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
                     >
-                      <h3 className="font-semibold text-xl text-indigo-700 mb-2">
-                        {todo.title}
-                      </h3>
-                      
+                      <div className="flex justify-between items-center">
+                        <h3 className="font-semibold text-xl text-indigo-700">
+                          {todo.title}
+                        </h3>
+                        <button
+                          onClick={() => handleDeleteTodo(todo._id)}
+                          className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                          aria-label="Delete todo"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
