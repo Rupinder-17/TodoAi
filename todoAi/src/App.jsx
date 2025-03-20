@@ -26,20 +26,21 @@ function App() {
     try {
       const response = await updateTodo(todoId, { title: editTitle });
       
-      if (response.success && response.data) {
+      // Check if response exists and has the expected structure
+      if (response && response.data && response.data.data) {
         setTodos((prevTodos) =>
           prevTodos.map((todo) =>
-            todo._id === todoId ? response.data : todo
+            todo._id === todoId ? response.data.data : todo
           )
         );
         setEditingId(null);
         setEditTitle("");
       } else {
-        throw new Error("Failed to update todo");
+        throw new Error("Invalid response format");
       }
     } catch (error) {
       console.error("Failed to update todo:", error);
-      // Optionally add user feedback here
+      alert("Failed to update todo. Please try again.");
     }
   };
 
