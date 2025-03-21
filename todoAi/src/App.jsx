@@ -3,10 +3,11 @@ import TodoForm from "./components/TodoForm";
 import TodoItem from "./components/TodoItem";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import { deleteTodo, updateTodo } from "./services/todoService";
+import useLocalStorage from "./hooks/useLocalStorage";
 import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useLocalStorage("todos", []);
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
 
