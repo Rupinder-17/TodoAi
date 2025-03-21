@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TodoForm from "./components/TodoForm";
+import TodoItem from "./components/TodoItem";
 import { FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import { deleteTodo, updateTodo } from "./services/todoService";
 import "./App.css";
@@ -26,13 +27,11 @@ function App() {
     try {
       const response = await updateTodo(todoId, { title: editTitle });
       console.log("Response:", response);
-      
+
       // Check if response exists and has the expected structure
       if (response && response.data) {
         setTodos((prevTodos) =>
-          prevTodos.map((todo) =>
-            todo._id === todoId ? response.data : todo
-          )
+          prevTodos.map((todo) => (todo._id === todoId ? response.data : todo))
         );
         setEditingId(null);
         setEditTitle("");
@@ -86,9 +85,18 @@ function App() {
                           </div>
                         ) : (
                           <>
-                            <h3 className="font-semibold text-xl text-indigo-700">
-                              {todo.title}
-                            </h3>
+                            <TodoItem
+                              todo={todo}
+                              onStatusChange={() => {
+                                setTodos((prevTodos) =>
+                                  prevTodos.map((t) =>
+                                    t._id === todo._id
+                                      ? { ...t, completed: !t.completed }
+                                      : t
+                                  )
+                                );
+                              }}
+                            />
                             <div className="flex gap-3">
                               <button
                                 onClick={() =>

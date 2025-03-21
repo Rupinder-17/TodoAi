@@ -1,5 +1,31 @@
 const API_BASE_URL = "https://api.freeapi.app/api/v1";
 
+export const toggleTodoStatus = async (todoId) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/todos/toggle/status/${todoId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to toggle todo status");
+    }
+
+    const result = await response.json();
+    if (!result.data) {
+      throw new Error("Invalid response format");
+    }
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const updateTodo = async (todoId, { title }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/todos/${todoId}`, {
@@ -9,8 +35,7 @@ export const updateTodo = async (todoId, { title }) => {
       },
       body: JSON.stringify({ title }),
     });
-    console.log("uppp",response);
-    
+    console.log("uppp", response);
 
     if (!response.ok) {
       throw new Error("Failed to update todo");
