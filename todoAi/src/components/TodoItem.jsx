@@ -12,20 +12,22 @@ const TodoItem = ({ todo, onStatusChange }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 p-2 border rounded">
-      <input
-        type="checkbox"
-        checked={todo.completed}
-        onChange={handleToggle}
-        className="w-4 h-4"
-      />
-      <span
+    <div className="flex items-center gap-2  rounded">
+      <div>
+        <input
+          type="checkbox"
+          checked={todo.completed}
+          onChange={handleToggle}
+          // className="w-4 h-4"
+        />
+      </div>
+      <p
         className={`flex-1 ${
           todo.completed ? "line-through text-gray-500" : ""
         }`}
       >
         {todo.title}
-      </span>
+      </p>
     </div>
   );
 };
