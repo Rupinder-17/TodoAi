@@ -33,7 +33,7 @@ const TodoForm = ({ onTodoCreated }) => {
   };
 
   return (
-    <div className="  p-8  bg-white rounded-xl shadow-lg transform transition-all duration-300 hover:shadow-xl">
+    <div className="p-8 bg-white rounded-xl shadow-lg transform transition-all duration-300 hover:shadow-xl">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex">
           {/* <label

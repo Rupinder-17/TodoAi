@@ -25,12 +25,13 @@ function App() {
   const handleUpdateTodo = async (todoId) => {
     try {
       const response = await updateTodo(todoId, { title: editTitle });
+      console.log("Response:", response);
       
       // Check if response exists and has the expected structure
-      if (response && response.data && response.data.data) {
+      if (response && response.data) {
         setTodos((prevTodos) =>
           prevTodos.map((todo) =>
-            todo._id === todoId ? response.data.data : todo
+            todo._id === todoId ? response.data : todo
           )
         );
         setEditingId(null);
@@ -50,7 +51,7 @@ function App() {
   };
 
   return (
-    <div className=" bg-amber-100  py-6 flex flex-col justify-center sm:py-12">
+    <div className=" bg-blue-100  py-6 flex flex-col justify-center sm:py-12">
       <div className=" py-3  sm:mx-24">
         <div className="py-12 bg-white/80 backdrop-blur-sm  rounded-3xl sm:p-12">
           <div className="w-full ">

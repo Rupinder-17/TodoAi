@@ -3,12 +3,14 @@ const API_BASE_URL = "https://api.freeapi.app/api/v1";
 export const updateTodo = async (todoId, { title }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/todos/${todoId}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ title }),
     });
+    console.log("uppp",response);
+    
 
     if (!response.ok) {
       throw new Error("Failed to update todo");
